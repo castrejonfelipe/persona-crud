@@ -1,10 +1,10 @@
 <<<<<<< HEAD
 
-# persona-crud
+### persona-crud
 
-## Demo de microservcio
+### Demo de microservcio
 
-## 🚀 Demo CRUD Microservice - Java 21 + Spring Boot (felcas)
+### 🚀 Demo CRUD Microservice - Java 21 + Spring Boot (felcas)
 
 Este proyecto es un **microservicio CRUD** de ejemplo desarrollado con **Java 21** y **Spring Boot 3.x**.
 Su propósito es demostrar una arquitectura básica de microservicio con:
@@ -17,7 +17,7 @@ Su propósito es demostrar una arquitectura básica de microservicio con:
 
 ---
 
-## 📦 Datos del proyecto
+### 📦 Datos del proyecto
 
 - **ArtifactId (pom.xml):** `felcas`
 - **Jar final empaquetado:** `persona-crud.jar`
@@ -25,7 +25,7 @@ Su propósito es demostrar una arquitectura básica de microservicio con:
 
 ---
 
-## 🛠️ Ejecución local
+### 🛠️ Ejecución local
 
 Clona el proyecto y compila:
 
@@ -50,7 +50,7 @@ Por defecto el servicio estará en:
 
 ---
 
-## 🐳 Docker
+### 🐳 Docker
 
 Construir imagen (usando el JAR final `persona-crud.jar`):
 
@@ -67,7 +67,7 @@ docker run -p 8080:8080 fmcastre/persona-crud:latest
 
 ---
 
-## 🤖 Jenkins Pipeline
+### 🤖 Jenkins Pipeline
 
 El `Jenkinsfile` incluido realiza:
 
@@ -77,14 +77,14 @@ El `Jenkinsfile` incluido realiza:
 4. **Build + Push imagen Docker a Docker Hub**
 
 
-## 📊 Reportes
+### 📊 Reportes
 
 - **JaCoCo:** `target/site/jacoco/index.html`
 - **SonarQube:** Configurar en `sonar-project.properties`
 
 ---
 
-## 🧱 Estructura
+### 🧱 Estructura
 
 ```
 src/
