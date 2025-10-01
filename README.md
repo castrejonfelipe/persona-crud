@@ -1,8 +1,10 @@
 <<<<<<< HEAD
+
 # persona-crud
-Demo de microservcio
-=======
-# 🚀 Demo CRUD Microservice - Java 21 + Spring Boot (felcas)
+
+## Demo de microservcio
+
+## 🚀 Demo CRUD Microservice - Java 21 + Spring Boot (felcas)
 
 Este proyecto es un **microservicio CRUD** de ejemplo desarrollado con **Java 21** y **Spring Boot 3.x**.
 Su propósito es demostrar una arquitectura básica de microservicio con:
@@ -16,6 +18,7 @@ Su propósito es demostrar una arquitectura básica de microservicio con:
 ---
 
 ## 📦 Datos del proyecto
+
 - **ArtifactId (pom.xml):** `felcas`
 - **Jar final empaquetado:** `persona-crud.jar`
 - **Imagen Docker (namespace):** `fmcastre/persona-crud`
@@ -73,11 +76,6 @@ El `Jenkinsfile` incluido realiza:
 3. **Análisis SonarQube**
 4. **Build + Push imagen Docker a Docker Hub**
 
-> ⚠️ Asegúrate de configurar las credenciales en Jenkins:
-> - `dockerhub-creds` → usuario/contraseña de Docker Hub  
-> - `sonar-token` → token de SonarQube
-
----
 
 ## 📊 Reportes
 
@@ -100,10 +98,3 @@ src/
    ├─ service/PersonServiceTest.java
    └─ controller/PersonControllerTest.java
 ```
-
----
-
-## 📜 Licencia
-
-Este proyecto es libre de uso para pruebas, demostraciones o como plantilla base para nuevos microservicios 🚀
->>>>>>> 34f5d6c (Primer commit del proyecto demo)
