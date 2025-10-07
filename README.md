@@ -76,7 +76,6 @@ El `Jenkinsfile` incluido realiza:
 3. **Análisis SonarQube**
 4. **Build + Push imagen Docker a Docker Hub**
 
-
 ### 📊 Reportes
 
 - **JaCoCo:** `target/site/jacoco/index.html`

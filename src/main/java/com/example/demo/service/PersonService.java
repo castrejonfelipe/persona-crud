@@ -11,10 +11,23 @@ import java.util.Optional;
 public class PersonService {
 
     private final PersonRepository repo;
-    public PersonService(PersonRepository repo) { this.repo = repo; }
-    public Person create(Person p) { return repo.save(p); }
-    public List<Person> list() { return repo.findAll(); }
-    public Optional<Person> get(Long id) { return repo.findById(id); }
+
+    public PersonService(PersonRepository repo) {
+        this.repo = repo;
+    }
+
+    public Person create(Person p) {
+        return repo.save(p);
+    }
+
+    public List<Person> list() {
+        return repo.findAll();
+    }
+
+    public Optional<Person> get(Long id) {
+        return repo.findById(id);
+    }
+
     public Person update(Long id, Person p) {
         return repo.findById(id).map(existing -> {
             existing.setName(p.getName());
@@ -22,5 +35,8 @@ public class PersonService {
             return repo.save(existing);
         }).orElseThrow(() -> new RuntimeException("Not found"));
     }
-    public void delete(Long id) { repo.deleteById(id); }
+
+    public void delete(Long id) {
+        repo.deleteById(id);
+    }
 }

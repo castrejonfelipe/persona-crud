@@ -34,7 +34,7 @@ class PersonServiceTest {
 
     @Test
     void list_shouldReturnAll() {
-        when(repo.findAll()).thenReturn(Arrays.asList(new Person("A","a@a"), new Person("B","b@b")));
+        when(repo.findAll()).thenReturn(Arrays.asList(new Person("A", "a@a"), new Person("B", "b@b")));
         List<Person> list = service.list();
         assertEquals(2, list.size());
         verify(repo).findAll();
@@ -42,7 +42,8 @@ class PersonServiceTest {
 
     @Test
     void get_shouldReturnOptional() {
-        Person p = new Person("X","x@x"); p.setId(5L);
+        Person p = new Person("X", "x@x");
+        p.setId(5L);
         when(repo.findById(5L)).thenReturn(Optional.of(p));
         Optional<Person> res = service.get(5L);
         assertTrue(res.isPresent());

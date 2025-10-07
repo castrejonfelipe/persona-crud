@@ -12,7 +12,10 @@ import java.util.List;
 @RequestMapping("/api/persons")
 public class PersonController {
     private final PersonService service;
-    public PersonController(PersonService service) { this.service = service; }
+
+    public PersonController(PersonService service) {
+        this.service = service;
+    }
 
     @PostMapping
     public ResponseEntity<Person> create(@RequestBody Person p) {
@@ -21,7 +24,9 @@ public class PersonController {
     }
 
     @GetMapping
-    public List<Person> list() { return service.list(); }
+    public List<Person> list() {
+        return service.list();
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Person> get(@PathVariable Long id) {
