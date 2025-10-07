@@ -50,7 +50,7 @@ pipeline {
             }
             steps {
                 echo "Analizando código con SonarQube..."
-                withSonarQubeEnv('SonarQubeServer') {
+                withSonarQubeEnv('SonarQube-Server') {
                     sh """
                         mvn sonar:sonar \
                           -Dsonar.projectKey=persona-crud \
