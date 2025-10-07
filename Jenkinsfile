@@ -14,7 +14,7 @@ pipeline {
             agent {
                 docker {
                     image 'maven:3.9.6-eclipse-temurin-21'
-                    args "-v ${env.HOME}/.m2:/root/.m2"
+                    args '-v /var/jenkins_home/.m2:/root/.m2'
                 }
             }
             steps {
@@ -27,11 +27,11 @@ pipeline {
             agent {
                 docker {
                     image 'maven:3.9.6-eclipse-temurin-21'
-                    args "-v ${env.HOME}/.m2:/root/.m2"
+                    args '-v /var/jenkins_home/.m2:/root/.m2'
                 }
             }
             steps {
-                echo " Ejecutando pruebas..."
+                echo "Ejecutando pruebas..."
                 sh 'mvn test jacoco:report'
             }
             post {
@@ -45,17 +45,17 @@ pipeline {
             agent {
                 docker {
                     image 'maven:3.9.6-eclipse-temurin-21'
-                    args "-v ${env.HOME}/.m2:/root/.m2"
+                    args '-v /var/jenkins_home/.m2:/root/.m2'
                 }
             }
             steps {
                 echo "Analizando código con SonarQube..."
                 withSonarQubeEnv('SonarQubeServer') {
                     sh """
-                    mvn sonar:sonar \
-                      -Dsonar.projectKey=persona-crud \
-                      -Dsonar.host.url=$SONAR_HOST_URL \
-                      -Dsonar.login=$SONAR_TOKEN
+                        mvn sonar:sonar \
+                          -Dsonar.projectKey=persona-crud \
+                          -Dsonar.host.url=$SONAR_HOST_URL \
+                          -Dsonar.login=$SONAR_TOKEN
                     """
                 }
             }
@@ -64,7 +64,7 @@ pipeline {
         stage('Build Docker Image') {
             agent any
             steps {
-                echo " Construyendo imagen Docker..."
+                echo "Construyendo imagen Docker..."
                 sh "docker build -t $IMAGE_NAME:${env.BUILD_NUMBER} ."
             }
         }
@@ -72,7 +72,7 @@ pipeline {
         stage('Push to DockerHub') {
             agent any
             steps {
-                echo " Enviando imagen a DockerHub..."
+                echo "Enviando imagen a DockerHub..."
                 withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
                     sh "echo $PASS | docker login -u $USER --password-stdin"
                     sh "docker tag $IMAGE_NAME:${env.BUILD_NUMBER} $USER/$IMAGE_NAME:${env.BUILD_NUMBER}"
