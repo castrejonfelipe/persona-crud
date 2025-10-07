@@ -14,7 +14,7 @@ pipeline {
             agent {
                 docker {
                     image 'maven:3.9.6-eclipse-temurin-21'
-                    args '-v /var/jenkins_home/.m2:/root/.m2'
+                    args '-v /var/jenkins_home/.m2:/root/.m2 -e HOME=/root'
                 }
             }
             steps {
@@ -27,7 +27,7 @@ pipeline {
             agent {
                 docker {
                     image 'maven:3.9.6-eclipse-temurin-21'
-                    args '-v /var/jenkins_home/.m2:/root/.m2'
+                    args '-v /var/jenkins_home/.m2:/root/.m2 -e HOME=/root'
                 }
             }
             steps {
@@ -45,7 +45,7 @@ pipeline {
             agent {
                 docker {
                     image 'maven:3.9.6-eclipse-temurin-21'
-                    args '-v /var/jenkins_home/.m2:/root/.m2'
+                    args '-v /var/jenkins_home/.m2:/root/.m2 -e HOME=/root'
                 }
             }
             steps {
