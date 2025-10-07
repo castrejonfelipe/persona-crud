@@ -1,5 +1,5 @@
 pipeline {
-    agent none
+    agent any
 
     environment {
         IMAGE_NAME = "persona-crud"
@@ -23,7 +23,7 @@ pipeline {
             }
         }
 
-        stage('Testing (JUnit + Jacoco)') {
+        stage('Testing') {
             agent {
                 docker {
                     image 'maven:3.9.6-eclipse-temurin-21'
@@ -69,7 +69,7 @@ pipeline {
             }
         }
 
-        stage('Push to DockerHub') {
+        stage('DockerHub') {
             agent any
             steps {
                 echo "Enviando imagen a DockerHub..."
