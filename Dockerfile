@@ -1,6 +1,11 @@
-FROM eclipse-temurin:21-jdk-jammy
+FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
-ARG JAR_FILE=target/persona-crud.jar
-COPY ${JAR_FILE} app.jar
+COPY . .
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","/app/app.jar"]
+

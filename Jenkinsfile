@@ -1,45 +1,79 @@
 pipeline {
-  agent any
-  environment {
-    DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
-    DOCKER_IMAGE = "fmcastre/persona-crud:${env.BUILD_NUMBER ?: 'latest'}"
-    SONAR_HOST_URL = credentials('sonar-host')
-    SONAR_LOGIN = credentials('sonar-token')
-  }
-  stages {
-    stage('Checkout') {
-      steps { checkout scm }
+    agent any
+
+    environment {
+        IMAGE_NAME = "persona-crud"
+        SONAR_HOST_URL = "http://sonarqube:9000"
+        SONAR_TOKEN = credentials('sonar-token')
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub')
     }
-    stage('Build') {
-      steps {
-        sh 'mvn -B -DskipTests package'
-      }
-    }
-    stage('Unit Tests & JaCoCo') {
-      steps {
-        sh 'mvn -B test jacoco:report'
-        junit 'target/surefire-reports/*.xml'
-        publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'target/site/jacoco', reportFiles: 'index.html', reportName: 'JaCoCo Report'])
-      }
-    }
-    stage('SonarQube Analysis') {
-      steps {
-        withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-          sh "mvn -B sonar:sonar -Dsonar.login=$SONAR_TOKEN -Dsonar.host.url=${SONAR_HOST_URL}"
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/castrejonfelipe/persona-crud.git'
+            }
         }
-      }
-    }
-    stage('Docker Build & Push') {
-      steps {
-        withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-          sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-          sh "docker build -t ${DOCKER_IMAGE} ."
-          sh "docker push ${DOCKER_IMAGE}"
+
+        stage('Build') {
+            steps {
+                echo " Build..."
+                sh 'mvn clean package -DskipTests'
+            }
         }
-      }
+
+        stage('Testing (JUnit + Jacoco)') {
+            steps {
+                echo "Test..."
+                sh 'mvn test jacoco:report'
+            }
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        stage('SonarQube') {
+            steps {
+                echo "🔍 Analizando código con SonarQube..."
+                withSonarQubeEnv('SonarQubeServer') {
+                    sh """
+                    mvn sonar:sonar \
+                      -Dsonar.projectKey=persona-crud \
+                      -Dsonar.host.url=$SONAR_HOST_URL \
+                      -Dsonar.login=$SONAR_TOKEN
+                    """
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo "📦 Construyendo imagen Docker..."
+                sh "docker build -t $IMAGE_NAME:${env.BUILD_NUMBER} ."
+            }
+        }
+
+        stage('Push to DockerHub') {
+            steps {
+                echo "🚀 Enviando imagen a DockerHub..."
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                    sh "echo $PASS | docker login -u $USER --password-stdin"
+                    sh "docker tag $IMAGE_NAME:${env.BUILD_NUMBER} $USER/$IMAGE_NAME:${env.BUILD_NUMBER}"
+                    sh "docker push $USER/$IMAGE_NAME:${env.BUILD_NUMBER}"
+                }
+            }
+        }
     }
-  }
-  post {
-    always { cleanWs() }
-  }
+
+    post {
+        success {
+            echo "✅ Pipeline completado exitosamente. Imagen publicada en DockerHub."
+        }
+        failure {
+            echo "❌ El pipeline falló. Revisa los logs en Jenkins."
+        }
+    }
 }
