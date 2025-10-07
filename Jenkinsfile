@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent none
 
     environment {
         IMAGE_NAME = "persona-crud"
@@ -11,15 +11,27 @@ pipeline {
     stages {
 
         stage('Build') {
+            agent {
+                docker {
+                    image 'maven:3.9.6-eclipse-temurin-21'
+                    args '-v $HOME/.m2:/root/.m2'
+                }
+            }
             steps {
-                echo " Build..."
+                echo "Compilando el proyecto con Java 21..."
                 sh 'mvn clean package -DskipTests'
             }
         }
 
         stage('Testing (JUnit + Jacoco)') {
+            agent {
+                docker {
+                    image 'maven:3.9.6-eclipse-temurin-21'
+                    args '-v $HOME/.m2:/root/.m2'
+                }
+            }
             steps {
-                echo "Test..."
+                echo " Ejecutando pruebas..."
                 sh 'mvn test jacoco:report'
             }
             post {
@@ -30,8 +42,14 @@ pipeline {
         }
 
         stage('SonarQube') {
+            agent {
+                docker {
+                    image 'maven:3.9.6-eclipse-temurin-21'
+                    args '-v $HOME/.m2:/root/.m2'
+                }
+            }
             steps {
-                echo "🔍 Analizando código con SonarQube..."
+                echo "Analizando código con SonarQube..."
                 withSonarQubeEnv('SonarQubeServer') {
                     sh """
                     mvn sonar:sonar \
@@ -44,13 +62,15 @@ pipeline {
         }
 
         stage('Build Docker Image') {
+            agent any
             steps {
-                echo "📦 Construyendo imagen Docker..."
+                echo " Construyendo imagen Docker..."
                 sh "docker build -t $IMAGE_NAME:${env.BUILD_NUMBER} ."
             }
         }
 
         stage('Push to DockerHub') {
+            agent any
             steps {
                 echo "🚀 Enviando imagen a DockerHub..."
                 withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
@@ -64,10 +84,10 @@ pipeline {
 
     post {
         success {
-            echo "✅ Pipeline completado exitosamente. Imagen publicada en DockerHub."
+            echo "Pipeline completado exitosamente. Imagen publicada en DockerHub."
         }
         failure {
-            echo "❌ El pipeline falló. Revisa los logs en Jenkins."
+            echo "El pipeline falló. Revisa los logs en Jenkins."
         }
     }
 }
