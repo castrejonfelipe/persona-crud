@@ -14,7 +14,7 @@ pipeline {
             agent {
                 docker {
                     image 'maven:3.9.6-eclipse-temurin-21'
-                    args '-e HOME=/root'  // Defino HOME para evitar error con repositorio Maven
+                    args '-e HOME=/root -u 0'  // correr como root para permisos
                 }
             }
             steps {
@@ -27,7 +27,7 @@ pipeline {
             agent {
                 docker {
                     image 'maven:3.9.6-eclipse-temurin-21'
-                    args '-e HOME=/root'
+                    args '-e HOME=/root -u 0'
                 }
             }
             steps {
@@ -45,7 +45,7 @@ pipeline {
             agent {
                 docker {
                     image 'maven:3.9.6-eclipse-temurin-21'
-                    args '-e HOME=/root'
+                    args '-e HOME=/root -u 0'
                 }
             }
             steps {
